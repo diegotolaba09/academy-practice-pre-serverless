@@ -9,7 +9,6 @@ const getShop = async (req, res) => {
   try {
     const { id } = req.params;
     const response = await shopModel.findById({ _id: id });
-    console.log(response);
     if (!response) {
       throw { message: "Shop not found", status: 404 };
     }
@@ -29,7 +28,7 @@ const createShop = async (req, res) => {
     });
     res.send({ data: responseShop });
   } catch (error) {
-    console.log(error);
+    res.json({ error });
   }
 };
 
