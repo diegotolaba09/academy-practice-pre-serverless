@@ -8,9 +8,13 @@ const ShopScheme = new mongoose.Schema(
     description: {
       type: String,
     },
-    country: {
+    address: {
       type: String,
     },
+    orders: [{
+      type: mongoose.Schema.ObjectId,
+      ref: "Order",
+    }]
   },
   {
     timestamps: true,
@@ -18,4 +22,4 @@ const ShopScheme = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("shops", ShopScheme);
+module.exports = mongoose.model("Shop", ShopScheme);

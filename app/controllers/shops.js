@@ -1,7 +1,12 @@
 const shopModel = require("../models/shops");
 
 const getShops = async (_req, res) => {
-  const shops = await shopModel.find({});
+  const shops = await shopModel.find({}).populate({
+    path: "orders",
+    populate: {
+      path: "products",
+    },
+  });
   res.send({ data: shops });
 };
 
@@ -20,11 +25,12 @@ const getShop = async (req, res) => {
 
 const createShop = async (req, res) => {
   try {
-    const { name, description, country } = req.body;
+    const { name, description, address, orders } = req.body;
     const responseShop = await shopModel.create({
       name,
       description,
-      country,
+      address,
+      orders,
     });
     res.send({ data: responseShop });
   } catch (error) {
@@ -35,15 +41,15 @@ const createShop = async (req, res) => {
 const updateShop = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, country } = req.body;
+    const { name, description, address, orders } = req.body;
     const response = await shopModel.findByIdAndUpdate(
       { _id: id },
-      { name, description, country }
+      { name, description, address, orders }
     );
     if (!response) {
       throw { message: "Shop not found", status: 404 };
     }
-    res.send({ data: { _id: id, name, description, country } });
+    res.send({ data: { _id: id, name, description, address } });
   } catch (error) {
     res.json(error);
   }
