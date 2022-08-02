@@ -1,4 +1,4 @@
-const shopModel = require("../models/shops");
+import shopModel from "../models/shops.js";
 
 const getShops = async (_req, res) => {
   const shops = await shopModel
@@ -73,4 +73,4 @@ const deleteShop = async (req, res) => {
   }
 };
 
-module.exports = { getShops, getShop, createShop, updateShop, deleteShop };
+export { getShops, getShop, createShop, updateShop, deleteShop };

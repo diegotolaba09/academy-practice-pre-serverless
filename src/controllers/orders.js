@@ -1,4 +1,4 @@
-const orderModel = require("../models/orders");
+import orderModel from "../models/orders.js";
 
 const getOrders = async (_req, res) => {
   const orders = await orderModel.find({}).populate({
@@ -34,4 +34,4 @@ const deleteOrder = async (req, res) => {
   }
 };
 
-module.exports = { getOrders, createOrder, deleteOrder };
+export { getOrders, createOrder, deleteOrder };

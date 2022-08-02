@@ -2,6 +2,7 @@
   "name": "academy-practice-pre-serverless",
   "version": "1.0.0",
   "description": "Practice pre-serverless in Backend Academy",
+  "type": "module",
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",

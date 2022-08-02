@@ -1,20 +1,13 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const routes = require("./routes");
+import connectDB from "./config/db.js";
+import "./config/env.js";
+import httpServer from "./config/http.js";
 
-const app = express();
-const { dbConnect } = require("../config/mongo");
+const bootstrap = async () => {
+  await connectDB(process.env.DB_URI);
 
-const PORT = process.env.PORT || 3000;
+  httpServer.listen(process.env.PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${process.env.PORT}`);
+  });
+};
 
-app.use(cors());
-app.use(express.json());
-
-app.use("/api/v1", routes);
-
-dbConnect();
-
-app.listen(PORT, () => {
-  console.log(`Listen on port ${PORT}`);
-});
+bootstrap();

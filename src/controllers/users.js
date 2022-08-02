@@ -1,4 +1,4 @@
-const userModel = require("../models/users");
+import userModel from "../models/users.js";
 
 const getUsers = async (_req, res) => {
   const users = await userModel.find({}).populate({
@@ -7,7 +7,7 @@ const getUsers = async (_req, res) => {
       path: "orders",
       populate: {
         path: "products",
-      }
+      },
     },
   });
   res.send({ data: users });
@@ -105,4 +105,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser };
+export { getUsers, getUser, createUser, updateUser, deleteUser };

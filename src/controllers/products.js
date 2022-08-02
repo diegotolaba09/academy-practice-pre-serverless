@@ -1,4 +1,4 @@
-const productModel = require("../models/products");
+import productModel from "../models/products.js";
 
 const getProducts = async (_req, res) => {
   const products = await productModel.find({});
@@ -32,4 +32,4 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { getProducts, createProduct, deleteProduct };
+export { getProducts, createProduct, deleteProduct };

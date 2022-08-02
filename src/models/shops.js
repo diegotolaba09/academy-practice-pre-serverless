@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const ShopScheme = new mongoose.Schema(
   {
@@ -15,10 +15,12 @@ const ShopScheme = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
-    orders: [{
-      type: mongoose.Schema.ObjectId,
-      ref: "Order",
-    }]
+    orders: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -26,4 +28,4 @@ const ShopScheme = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Shop", ShopScheme);
+export default mongoose.model("Shop", ShopScheme);

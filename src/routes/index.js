@@ -1,13 +1,15 @@
-const express = require("express");
+import express from "express";
+
+import orders from "./orders.js";
+import products from "./products.js";
+import shops from "./shops.js";
+import users from "./users.js";
+
 const router = express.Router();
-const orders = require("./orders");
-const products = require("./products");
-const shops = require("./shops");
-const users = require("./users");
 
 router.use("/orders", orders);
 router.use("/products", products);
 router.use("/shops", shops);
 router.use("/users", users);
 
-module.exports = router;
+export default router;
