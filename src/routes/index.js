@@ -1,19 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
+const orders = require("./orders");
+const products = require("./products");
+const shops = require("./shops");
+const users = require("./users");
 
-const pathRouter = `${__dirname}`;
-
-const removeExension = (fileName) => {
-  return fileName.split(".").shift();
-};
-
-fs.readdirSync(pathRouter).filter((file) => {
-  const fileWithOutExt = removeExension(file);
-  const skip = ["index"].includes(fileWithOutExt);
-  if (!skip) {
-    router.use(`/${fileWithOutExt}`, require(`./${fileWithOutExt}`));
-  }
-});
+router.use("/orders", orders);
+router.use("/products", products);
+router.use("/shops", shops);
+router.use("/users", users);
 
 module.exports = router;

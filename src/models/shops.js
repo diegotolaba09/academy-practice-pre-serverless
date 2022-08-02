@@ -11,6 +11,10 @@ const ShopScheme = new mongoose.Schema(
     address: {
       type: String,
     },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
     orders: [{
       type: mongoose.Schema.ObjectId,
       ref: "Order",
