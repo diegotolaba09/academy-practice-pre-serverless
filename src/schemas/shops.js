@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
+const { Schema, model } = mongoose;
 
 const ShopScheme = new mongoose.Schema(
   {
@@ -11,10 +13,16 @@ const ShopScheme = new mongoose.Schema(
     address: {
       type: String,
     },
-    orders: [{
+    user: {
       type: mongoose.Schema.ObjectId,
-      ref: "Order",
-    }]
+      ref: "User",
+    },
+    orders: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -22,4 +30,4 @@ const ShopScheme = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Shop", ShopScheme);
+export default model("Shop", ShopScheme);

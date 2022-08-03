@@ -1,11 +1,11 @@
-const express = require("express");
-const {
+import express from "express";
+import {
   getShops,
   getShop,
   createShop,
   updateShop,
   deleteShop,
-} = require("../controllers/shops");
+} from "../controllers/shops.js";
 
 const router = express.Router();
 
@@ -19,4 +19,4 @@ router.patch("/:id", updateShop);
 
 router.delete("/:id", deleteShop);
 
-module.exports = router;
+export default router;
