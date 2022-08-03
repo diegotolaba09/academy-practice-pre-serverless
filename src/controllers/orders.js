@@ -1,4 +1,4 @@
-import orderModel from "../models/orders.js";
+import orderModel from "../schemas/orders.js";
 
 const getOrders = async (_req, res) => {
   const orders = await orderModel.find({}).populate({

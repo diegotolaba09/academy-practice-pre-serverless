@@ -1,4 +1,4 @@
-import shopModel from "../models/shops.js";
+import shopModel from "../schemas/shops.js";
 
 const getShops = async (_req, res) => {
   const shops = await shopModel

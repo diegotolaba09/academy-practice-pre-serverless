@@ -1,4 +1,4 @@
-import userModel from "../models/users.js";
+import userModel from "../schemas/users.js";
 
 const getUsers = async (_req, res) => {
   const users = await userModel.find({}).populate({

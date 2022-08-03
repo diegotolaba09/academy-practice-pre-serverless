@@ -1,22 +1,32 @@
 import mongoose from "mongoose";
 
-const UserScheme = new mongoose.Schema(
+const { Schema, model } = mongoose;
+
+const UserScheme = new Schema(
   {
     fullName: {
       type: String,
+      required: true,
+      minLength: 6,
+      maxLength: 30,
     },
     email: {
       type: String,
+      required: true,
+      unique: true,
     },
     username: {
       type: String,
+      required: true,
     },
     password: {
-      type: Number,
+      type: String,
+      required: true,
     },
     role: {
       type: String,
       enum: ["admin", "editor", "customer", "guest"],
+      required: true,
     },
     locations: {
       country: {
@@ -33,9 +43,9 @@ const UserScheme = new mongoose.Schema(
       },
     },
     paymentLimit: {
-      type: String,
+      type: Number,
     },
-    shop: { type: mongoose.Schema.ObjectId, ref: "Shop" },
+    shop: { type: Schema.ObjectId, ref: "Shop" },
   },
   {
     timestamps: true,
@@ -43,4 +53,4 @@ const UserScheme = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("User", UserScheme);
+export default model("User", UserScheme);

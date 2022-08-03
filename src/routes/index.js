@@ -1,5 +1,4 @@
 import express from "express";
-
 import orders from "./orders.js";
 import products from "./products.js";
 import shops from "./shops.js";

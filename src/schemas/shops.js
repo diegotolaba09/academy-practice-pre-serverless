@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const { Schema, model } = mongoose;
+
 const ShopScheme = new mongoose.Schema(
   {
     name: {
@@ -28,4 +30,4 @@ const ShopScheme = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Shop", ShopScheme);
+export default model("Shop", ShopScheme);

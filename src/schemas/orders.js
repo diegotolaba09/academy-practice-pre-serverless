@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const { Schema, model } = mongoose;
+
 const OrderScheme = new mongoose.Schema(
   {
     amount: {
@@ -22,4 +24,4 @@ const OrderScheme = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Order", OrderScheme);
+export default model("Order", OrderScheme);
