@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
+import { USER_ROLES } from "../constants/utils.js";
 
 const { Schema, model } = mongoose;
+const { ADMIN, EDITOR, CUSTOMER, GUEST } = USER_ROLES;
 
 const UserScheme = new Schema(
   {
@@ -25,7 +27,7 @@ const UserScheme = new Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "editor", "customer", "guest"],
+      enum: [ADMIN, EDITOR, CUSTOMER, GUEST],
       required: true,
     },
     locations: {

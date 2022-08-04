@@ -6,17 +6,18 @@ import {
   updateShop,
   deleteShop,
 } from "../controllers/shops.js";
+import { checkAuth } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.get("/", getShops);
+router.get("/", checkAuth, getShops);
 
-router.get("/:id", getShop);
+router.get("/:id", checkAuth, getShop);
 
-router.post("/", createShop);
+router.post("/", checkAuth, createShop);
 
-router.patch("/:id", updateShop);
+router.patch("/:id", checkAuth, updateShop);
 
-router.delete("/:id", deleteShop);
+router.delete("/:id", checkAuth, deleteShop);
 
 export default router;

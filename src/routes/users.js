@@ -1,27 +1,29 @@
 import express from "express";
+import { USER_ROLES } from "../constants/utils.js";
 import {
   getUsers,
   getUser,
-  createUser,
   updateUser,
   deleteUser,
 } from "../controllers/users.js";
-import {
-  userCreateDTO,
-  userUpdateDTO,
-  userDeleteDTO,
-} from "../dto/users.dto.js";
+import { userUpdateDTO, userDeleteDTO } from "../dto/users.js";
+import { checkAuth, checkRole } from "../middlewares/auth.js";
 
 const router = express.Router();
+const { ADMIN, EDITOR, CUSTOMER } = USER_ROLES;
 
-router.get("/", getUsers);
+router.get("/", checkAuth, checkRole([ADMIN]), getUsers);
 
-router.get("/:id", getUser);
+router.get("/:id", checkAuth, checkRole([ADMIN, EDITOR, CUSTOMER]), getUser);
 
-router.post("/", userCreateDTO, createUser);
+router.patch(
+  "/:id",
+  checkAuth,
+  checkRole([ADMIN, EDITOR, CUSTOMER]),
+  userUpdateDTO,
+  updateUser
+);
 
-router.patch("/:id", userUpdateDTO, updateUser);
-
-router.delete("/:id", userDeleteDTO, deleteUser);
+router.delete("/:id", checkAuth, checkRole([ADMIN]), userDeleteDTO, deleteUser);
 
 export default router;
