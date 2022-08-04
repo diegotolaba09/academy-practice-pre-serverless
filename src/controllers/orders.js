@@ -1,13 +1,17 @@
 import orderModel from "../schemas/orders.js";
 
-const getOrders = async (_req, res) => {
-  const orders = await orderModel.find({}).populate({
-    path: "products",
-  });
-  res.send({ data: orders });
+const getOrders = async (_req, res, next) => {
+  try {
+    const orders = await orderModel.find({}).populate({
+      path: "products",
+    });
+    res.send({ data: orders });
+  } catch (err) {
+    next(err);
+  }
 };
 
-const createOrder = async (req, res) => {
+const createOrder = async (req, res, next) => {
   try {
     const { amount, status, products } = req.body;
     const response = await orderModel.create({
@@ -16,12 +20,12 @@ const createOrder = async (req, res) => {
       products,
     });
     res.send({ data: response });
-  } catch (error) {
-    res.json({ error });
+  } catch (err) {
+    next(err);
   }
 };
 
-const deleteOrder = async (req, res) => {
+const deleteOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await orderModel.findByIdAndDelete({ _id: id });
@@ -29,8 +33,8 @@ const deleteOrder = async (req, res) => {
       throw { message: "Order not found", status: 404 };
     }
     res.send({ data: response });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 

@@ -1,20 +1,24 @@
 import shopModel from "../schemas/shops.js";
 
-const getShops = async (_req, res) => {
-  const shops = await shopModel
-    .find({})
-    .populate({ path: "user" })
-    .populate({
-      path: "orders",
-      populate: {
-        path: "products",
-      },
-    });
+const getShops = async (_req, res, next) => {
+  try {
+    const shops = await shopModel
+      .find({})
+      .populate({ path: "user" })
+      .populate({
+        path: "orders",
+        populate: {
+          path: "products",
+        },
+      });
 
-  res.send({ data: shops });
+    res.send({ data: shops });
+  } catch (err) {
+    next(err);
+  }
 };
 
-const getShop = async (req, res) => {
+const getShop = async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await shopModel.findById({ _id: id });
@@ -22,12 +26,12 @@ const getShop = async (req, res) => {
       throw { message: "Shop not found", status: 404 };
     }
     res.send({ data: response });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-const createShop = async (req, res) => {
+const createShop = async (req, res, next) => {
   try {
     const { name, description, address, user, orders } = req.body;
     const responseShop = await shopModel.create({
@@ -38,12 +42,12 @@ const createShop = async (req, res) => {
       orders,
     });
     res.send({ data: responseShop });
-  } catch (error) {
-    res.json({ error });
+  } catch (err) {
+    next(err);
   }
 };
 
-const updateShop = async (req, res) => {
+const updateShop = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, description, address, user, orders } = req.body;
@@ -55,12 +59,12 @@ const updateShop = async (req, res) => {
       throw { message: "Shop not found", status: 404 };
     }
     res.send({ data: { _id: id, name, description, address } });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-const deleteShop = async (req, res) => {
+const deleteShop = async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await shopModel.findByIdAndDelete({ _id: id });
@@ -68,8 +72,8 @@ const deleteShop = async (req, res) => {
       throw { message: "Shop not found", status: 404 };
     }
     res.send({ data: response });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 

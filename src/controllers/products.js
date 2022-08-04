@@ -1,11 +1,15 @@
 import productModel from "../schemas/products.js";
 
-const getProducts = async (_req, res) => {
-  const products = await productModel.find({});
-  res.send({ data: products });
+const getProducts = async (_req, res, next) => {
+  try {
+    const products = await productModel.find({});
+    res.send({ data: products });
+  } catch (err) {
+    next(err);
+  }
 };
 
-const createProduct = async (req, res) => {
+const createProduct = async (req, res, next) => {
   try {
     const { name, description, price } = req.body;
     const responseProduct = await productModel.create({
@@ -14,12 +18,12 @@ const createProduct = async (req, res) => {
       price,
     });
     res.send({ data: responseProduct });
-  } catch (error) {
-    res.json({ error });
+  } catch (err) {
+    next(err);
   }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await productModel.findByIdAndDelete({ _id: id });
@@ -27,8 +31,8 @@ const deleteProduct = async (req, res) => {
       throw { message: "Product not found", status: 404 };
     }
     res.send({ data: response });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 

@@ -1,19 +1,24 @@
+import { encrypt } from "../helpers/handleBcrypt.js";
 import userModel from "../schemas/users.js";
 
-const getUsers = async (_req, res) => {
-  const users = await userModel.find({}).populate({
-    path: "shop",
-    populate: {
-      path: "orders",
+const getUsers = async (_req, res, next) => {
+  try {
+    const users = await userModel.find({}).populate({
+      path: "shop",
       populate: {
-        path: "products",
+        path: "orders",
+        populate: {
+          path: "products",
+        },
       },
-    },
-  });
-  res.send({ data: users });
+    });
+    res.send({ data: users });
+  } catch (err) {
+    next(err);
+  }
 };
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await userModel.findById({ _id: id });
@@ -21,40 +26,12 @@ const getUser = async (req, res) => {
       throw { message: "User not found", status: 404 };
     }
     res.send({ data: response });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-const createUser = async (req, res) => {
-  try {
-    const {
-      fullName,
-      email,
-      username,
-      password,
-      role,
-      locations,
-      paymentLimit,
-      shop,
-    } = req.body;
-    const responseUser = await userModel.create({
-      fullName,
-      email,
-      username,
-      password,
-      role,
-      locations,
-      paymentLimit,
-      shop,
-    });
-    res.send({ data: responseUser });
-  } catch (error) {
-    res.json({ error });
-  }
-};
-
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const {
@@ -67,32 +44,45 @@ const updateUser = async (req, res) => {
       paymentLimit,
       shop,
     } = req.body;
+
+    const passwordHash = await encrypt(password);
+
     const response = await userModel.findByIdAndUpdate(
       { _id: id },
-      { fullName, email, username, password, role, locations, paymentLimit }
+      {
+        fullName,
+        email,
+        username,
+        password: passwordHash,
+        role,
+        locations,
+        paymentLimit,
+      }
     );
+
     if (!response) {
       throw { message: "User not found", status: 404 };
     }
+
     res.send({
       data: {
         _id: id,
         fullName,
         email,
         username,
-        password,
+        password: passwordHash,
         role,
         locations,
         paymentLimit,
         shop,
       },
     });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await userModel.findByIdAndDelete({ _id: id });
@@ -100,9 +90,9 @@ const deleteUser = async (req, res) => {
       throw { message: "User not found", status: 404 };
     }
     res.send({ data: response });
-  } catch (error) {
-    res.json(error);
+  } catch (err) {
+    next(err);
   }
 };
 
-export { getUsers, getUser, createUser, updateUser, deleteUser };
+export { getUsers, getUser, updateUser, deleteUser };
