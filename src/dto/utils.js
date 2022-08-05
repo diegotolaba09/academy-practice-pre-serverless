@@ -1,4 +1,5 @@
 import { check, checkSchema } from "express-validator";
+import { USER_ROLES } from "../constants/utils.js";
 import users from "../schemas/users.js";
 
 export const checkSchemaParamsId = [
@@ -41,6 +42,18 @@ export const createUpdateUser = [
       matches: {
         options: [/\b(?:admin|editor|customer|guest)\b/],
         errorMessage: "Invalid role",
+      },
+      custom: {
+        options: async (value, { req }) => {
+          const { id } = req.params;
+          const user = await users.findById(id);
+          if (value === USER_ROLES.ADMIN && user?.role !== USER_ROLES.ADMIN) {
+            throw new Error(
+              "The admin is the only one who can change or create a user with the role to admin"
+            );
+          }
+          return value;
+        },
       },
     },
   }),

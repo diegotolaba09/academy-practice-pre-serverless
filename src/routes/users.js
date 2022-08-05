@@ -12,7 +12,7 @@ import { checkAuth, checkRole } from "../middlewares/auth.js";
 const router = express.Router();
 const { ADMIN, EDITOR, CUSTOMER } = USER_ROLES;
 
-router.get("/", checkAuth, checkRole([ADMIN]), getUsers);
+router.get("/", checkAuth, checkRole([ADMIN, EDITOR]), getUsers);
 
 router.get("/:id", checkAuth, checkRole([ADMIN, EDITOR, CUSTOMER]), getUser);
 

@@ -28,7 +28,10 @@ export const checkRole = (roles) => async (req, res, next) => {
     const userData = await users.findById(tokenData._id);
 
     if (!userData?.role || ![].concat(roles).includes(userData.role)) {
-      throw { message: "You are not authorized", status: 401 };
+      throw {
+        message: `Your ${userData?.role} role not authorized`,
+        status: 401,
+      };
     }
 
     next();
