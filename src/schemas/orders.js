@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const OrderScheme = new mongoose.Schema(
+const OrderScheme = new Schema(
   {
     amount: {
       type: Number,
@@ -13,7 +13,7 @@ const OrderScheme = new mongoose.Schema(
     },
     products: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: "Product",
       },
     ],

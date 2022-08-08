@@ -3,9 +3,16 @@ import { validateResult } from "../helpers/validateHelpers.js";
 import users from "../schemas/users.js";
 import { checkSchemaParamsId, createUpdateUser } from "./utils.js";
 
-export const userUpdateDTO = [
+const userDTO = [
+  ...checkSchemaParamsId("User", users),
+  (req, res, next) => {
+    validateResult(req, res, next);
+  },
+];
+
+const userUpdateDTO = [
   ...createUpdateUser,
-  ...checkSchemaParamsId,
+  ...checkSchemaParamsId("User", users),
   check("email", "Email is required")
     .exists()
     .not()
@@ -23,9 +30,4 @@ export const userUpdateDTO = [
   },
 ];
 
-export const userDeleteDTO = [
-  ...checkSchemaParamsId,
-  (req, res, next) => {
-    validateResult(req, res, next);
-  },
-];
+export { userDTO, userUpdateDTO };

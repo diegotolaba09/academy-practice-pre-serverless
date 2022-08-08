@@ -1,24 +1,32 @@
 import { check, checkSchema } from "express-validator";
+import mongoose from "mongoose";
+import { USER_ROLES } from "../constants/utils.js";
 import users from "../schemas/users.js";
 
-export const checkSchemaParamsId = [
+const { ADMIN, EDITOR } = USER_ROLES;
+const { ObjectId } = mongoose.Types;
+
+const checkSchemaParamsId = (title, schema) => [
   checkSchema({
     _id: {
       in: "params",
       custom: {
-        options: (_value, { req }) => {
-          return users.find({ _id: req.params.id }).then((user) => {
-            if (!user?.length) {
-              throw new Error("User id not found");
-            }
-          });
+        options: async (_value, { req }) => {
+          const { id } = req.params;
+          if (!ObjectId.isValid(id)) {
+            throw new Error("ObjectId is invalid");
+          }
+          const data = await schema.findById(id);
+          if (!data) {
+            throw new Error(`${title} id not found`);
+          }
         },
       },
     },
   }),
 ];
 
-export const createUpdateUser = [
+const createUpdateUser = [
   check("fullName", "Full name is required")
     .exists()
     .not()
@@ -42,7 +50,28 @@ export const createUpdateUser = [
         options: [/\b(?:admin|editor|customer|guest)\b/],
         errorMessage: "Invalid role",
       },
+      custom: {
+        options: async (value, { req }) => {
+          const { id } = req.params;
+          const user = await users.findById(id);
+          if ([ADMIN, EDITOR].includes(value) && user?.role !== ADMIN) {
+            throw new Error(
+              "The admin is the only one who can change or create a user with the role to admin"
+            );
+          }
+          return value;
+        },
+      },
     },
   }),
-  check("paymentLimit", "Payment limit is required").exists().isNumeric(),
+  check("paymentLimit", "Payment limit is required")
+    .exists()
+    .isBoolean()
+    .withMessage("Payment limit must be Boolean"),
 ];
+
+const isValidObjectId = (id) => {
+  return ObjectId.isValid(id);
+};
+
+export { checkSchemaParamsId, createUpdateUser, isValidObjectId };

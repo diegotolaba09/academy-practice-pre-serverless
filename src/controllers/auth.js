@@ -1,6 +1,8 @@
 import { tokenSign } from "../helpers/generateToken.js";
 import { compare, encrypt } from "../helpers/handleBcrypt.js";
 import userModel from "../schemas/users.js";
+import shopModel from "../schemas/shops.js";
+import mongoose from "mongoose";
 
 const login = async (req, res, next) => {
   try {
@@ -24,7 +26,7 @@ const login = async (req, res, next) => {
   }
 };
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   try {
     const {
       fullName,
@@ -34,12 +36,12 @@ const register = async (req, res) => {
       role,
       locations,
       paymentLimit,
-      shop,
+      shop: shopId,
     } = req.body;
 
     const passwordHash = await encrypt(password);
-
-    const user = await userModel.create({
+    const shop = await shopModel.findById(shopId);
+    const dataByUser = {
       fullName,
       email,
       username,
@@ -47,8 +49,18 @@ const register = async (req, res) => {
       role,
       locations,
       paymentLimit,
-      shop,
-    });
+    };
+
+    if (shop) {
+      dataByUser.shop = shopId;
+    }
+
+    const user = await userModel.create(dataByUser);
+    
+    if (shop && user?.shop) {
+      shop.users.push(user._id);
+      await shop.save();
+    }
 
     res.send({ data: user });
   } catch (err) {

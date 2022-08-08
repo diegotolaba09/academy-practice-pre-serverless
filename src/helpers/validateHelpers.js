@@ -1,6 +1,6 @@
 import { validationResult } from "express-validator";
 
-export const validateResult = (req, res, next) => {
+const validateResult = (req, res, next) => {
   try {
     validationResult(req).throw();
     return next();
@@ -12,3 +12,4 @@ export const validateResult = (req, res, next) => {
     res.send({ errors: [...formatError] });
   }
 };
+export { validateResult };

@@ -9,6 +9,19 @@ const getProducts = async (_req, res, next) => {
   }
 };
 
+const getProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const response = await productModel.findById(id);
+    if (!response) {
+      throw { message: "Product not found", status: 404 };
+    }
+    res.send({ data: response });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const createProduct = async (req, res, next) => {
   try {
     const { name, description, price } = req.body;
@@ -17,6 +30,24 @@ const createProduct = async (req, res, next) => {
       description,
       price,
     });
+    res.send({ data: responseProduct });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const updateProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, description, price } = req.body;
+    const responseProduct = await productModel.findByIdAndUpdate(
+      { _id: id },
+      {
+        name,
+        description,
+        price,
+      }
+    );
     res.send({ data: responseProduct });
   } catch (err) {
     next(err);
@@ -36,4 +67,4 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-export { getProducts, createProduct, deleteProduct };
+export { getProducts, getProduct, createProduct, updateProduct, deleteProduct };

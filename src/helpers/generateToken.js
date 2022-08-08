@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const verifyToken = async (token) => {
+const verifyToken = async (token) => {
   try {
     return await jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
@@ -8,7 +8,7 @@ export const verifyToken = async (token) => {
   }
 };
 
-export const tokenSign = async (user) => {
+const tokenSign = async (user) => {
   return await jwt.sign(
     {
       _id: user._id,
@@ -21,6 +21,8 @@ export const tokenSign = async (user) => {
   );
 };
 
-export const decodeSign = (token) => {
+const decodeSign = (token) => {
   return jwt.decode(token, null);
 };
+
+export { verifyToken, tokenSign, decodeSign };

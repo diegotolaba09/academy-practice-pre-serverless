@@ -6,15 +6,21 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/users.js";
-import { userUpdateDTO, userDeleteDTO } from "../dto/users.js";
+import { userUpdateDTO, userDTO } from "../dto/users.js";
 import { checkAuth, checkRole } from "../middlewares/auth.js";
 
 const router = express.Router();
 const { ADMIN, EDITOR, CUSTOMER } = USER_ROLES;
 
-router.get("/", checkAuth, checkRole([ADMIN]), getUsers);
+router.get("/", checkAuth, checkRole([ADMIN, EDITOR]), getUsers);
 
-router.get("/:id", checkAuth, checkRole([ADMIN, EDITOR, CUSTOMER]), getUser);
+router.get(
+  "/:id",
+  checkAuth,
+  checkRole([ADMIN, EDITOR, CUSTOMER]),
+  userDTO,
+  getUser
+);
 
 router.patch(
   "/:id",
@@ -24,6 +30,6 @@ router.patch(
   updateUser
 );
 
-router.delete("/:id", checkAuth, checkRole([ADMIN]), userDeleteDTO, deleteUser);
+router.delete("/:id", checkAuth, checkRole([ADMIN]), userDTO, deleteUser);
 
 export default router;

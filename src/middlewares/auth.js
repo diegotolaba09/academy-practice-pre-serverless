@@ -1,7 +1,6 @@
-import { verifyToken } from "../helpers/generateToken.js";
-import users from "../schemas/users.js";
+import { decodeSign, verifyToken } from "../helpers/generateToken.js";
 
-export const checkAuth = async (req, res, next) => {
+const checkAuth = async (req, res, next) => {
   try {
     const token = getToken(req);
 
@@ -21,14 +20,16 @@ export const checkAuth = async (req, res, next) => {
   }
 };
 
-export const checkRole = (roles) => async (req, res, next) => {
+const checkRole = (roles) => async (req, res, next) => {
   try {
     const token = getToken(req);
-    const tokenData = await verifyToken(token);
-    const userData = await users.findById(tokenData._id);
+    const { role } = decodeSign(token);
 
-    if (!userData?.role || ![].concat(roles).includes(userData.role)) {
-      throw { message: "You are not authorized", status: 401 };
+    if (!role || ![].concat(roles).includes(role)) {
+      throw {
+        message: `Your ${role} role not authorized`,
+        status: 401,
+      };
     }
 
     next();
@@ -40,3 +41,5 @@ export const checkRole = (roles) => async (req, res, next) => {
 const getToken = (req) => {
   return req.headers.authorization?.split(" ")?.pop();
 };
+
+export { checkAuth, checkRole, getToken };
