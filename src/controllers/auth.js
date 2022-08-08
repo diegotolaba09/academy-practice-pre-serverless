@@ -35,7 +35,7 @@ const register = async (req, res, next) => {
       password,
       role,
       locations,
-      paymentLimit,
+      availableLimit,
       shop: shopId,
     } = req.body;
 
@@ -48,7 +48,7 @@ const register = async (req, res, next) => {
       password: passwordHash,
       role,
       locations,
-      paymentLimit,
+      availableLimit,
     };
 
     if (shop) {

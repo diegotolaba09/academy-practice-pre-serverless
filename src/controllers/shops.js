@@ -8,7 +8,7 @@ const getShops = async (_req, res, next) => {
       .find({})
       .populate("users")
       .populate({
-        path: "orders",
+        path: "paymentIntents",
         populate: {
           path: "products",
         },
@@ -46,13 +46,13 @@ const getShop = async (req, res, next) => {
 
 const createShop = async (req, res, next) => {
   try {
-    const { name, description, address, users, orders } = req.body;
+    const { name, description, address, users, paymentIntents } = req.body;
     const responseShop = await shopModel.create({
       name,
       description,
       address,
       users,
-      orders,
+      paymentIntents,
     });
     res.send({ data: responseShop });
   } catch (err) {
@@ -63,7 +63,7 @@ const createShop = async (req, res, next) => {
 const updateShop = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, description, address, users, orders } = req.body;
+    const { name, description, address, users, paymentIntents } = req.body;
     const { role, userId } = getUserAuth(req);
 
     const shop = await shopModel.findById(id);
@@ -77,7 +77,7 @@ const updateShop = async (req, res, next) => {
 
     const response = await shopModel.findByIdAndUpdate(
       { _id: id },
-      { name, description, address, users, orders }
+      { name, description, address, users, paymentIntents }
     );
 
     if (!response) {
