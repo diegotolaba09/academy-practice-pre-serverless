@@ -64,8 +64,7 @@ const createUpdateUser = [
       },
     },
   }),
-  check("paymentLimit", "Payment limit is required")
-    .exists()
+  check("availableLimit", "Payment limit must be Boolean")
     .isBoolean()
     .withMessage("Payment limit must be Boolean"),
 ];

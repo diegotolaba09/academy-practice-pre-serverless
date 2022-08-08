@@ -2,14 +2,17 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const OrderScheme = new Schema(
+const PaymentIntentScheme = new Schema(
   {
     amount: {
       type: Number,
     },
     status: {
       type: String,
-      enum: ["pending", "success"],
+      enum: ["pending", "finished", "blocked", "canceled"],
+    },
+    paymentId: {
+      type: Schema.ObjectId,
     },
     products: [
       {
@@ -17,6 +20,10 @@ const OrderScheme = new Schema(
         ref: "Product",
       },
     ],
+    shop: {
+      type: Schema.ObjectId,
+      ref: "Shop",
+    },
   },
   {
     timestamps: true,
@@ -24,4 +31,4 @@ const OrderScheme = new Schema(
   }
 );
 
-export default model("Order", OrderScheme);
+export default model("PaymentIntent", PaymentIntentScheme);

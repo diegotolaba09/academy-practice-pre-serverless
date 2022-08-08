@@ -44,8 +44,9 @@ const UserScheme = new Schema(
         type: Number,
       },
     },
-    paymentLimit: {
+    availableLimit: {
       type: Boolean,
+      default: false,
     },
     shop: { type: Schema.ObjectId, ref: "Shop" },
   },

@@ -7,7 +7,7 @@ const getUsers = async (_req, res, next) => {
     const users = await userModel.find({}).populate({
       path: "shop",
       populate: {
-        path: "orders",
+        path: "paymentIntents",
         populate: {
           path: "products",
         },
@@ -44,7 +44,7 @@ const updateUser = async (req, res, next) => {
       password,
       role,
       locations,
-      paymentLimit,
+      availableLimit,
       shop: shopId,
     } = req.body;
 
@@ -57,7 +57,7 @@ const updateUser = async (req, res, next) => {
       password: passwordHash,
       role,
       locations,
-      paymentLimit,
+      availableLimit,
     };
 
     const shop = await shopModel.findById(shopId);

@@ -19,10 +19,10 @@ const ShopScheme = new Schema(
         ref: "User",
       },
     ],
-    orders: [
+    paymentIntents: [
       {
         type: Schema.ObjectId,
-        ref: "Order",
+        ref: "PaymentIntent",
       },
     ],
   },
