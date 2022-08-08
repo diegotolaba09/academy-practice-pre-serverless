@@ -8,18 +8,31 @@ import {
   deleteShop,
 } from "../controllers/shops.js";
 import { checkAuth, checkRole } from "../middlewares/auth.js";
+import { shopDTO, shopCreateDTO, shopUpdateDTO } from "../dto/shops.js";
 
 const router = express.Router();
-const { ADMIN } = USER_ROLES;
+const { ADMIN, EDITOR } = USER_ROLES;
 
 router.get("/", checkAuth, checkRole([ADMIN]), getShops);
 
-router.get("/:id", checkAuth, checkRole([ADMIN]), getShop);
+router.get("/:id", checkAuth, checkRole([ADMIN, EDITOR]), shopDTO, getShop);
 
-router.post("/", checkAuth, checkRole([ADMIN]), createShop);
+router.post("/", checkAuth, checkRole([ADMIN]), shopCreateDTO, createShop);
 
-router.patch("/:id", checkAuth, checkRole([ADMIN]), updateShop);
+router.patch(
+  "/:id",
+  checkAuth,
+  checkRole([ADMIN, EDITOR]),
+  shopUpdateDTO,
+  updateShop
+);
 
-router.delete("/:id", checkAuth, checkRole([ADMIN]), deleteShop);
+router.delete(
+  "/:id",
+  checkAuth,
+  checkRole([ADMIN, EDITOR]),
+  shopDTO,
+  deleteShop
+);
 
 export default router;

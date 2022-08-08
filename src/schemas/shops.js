@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const ShopScheme = new mongoose.Schema(
+const ShopScheme = new Schema(
   {
     name: {
       type: String,
@@ -13,13 +13,15 @@ const ShopScheme = new mongoose.Schema(
     address: {
       type: String,
     },
-    user: {
-      type: mongoose.Schema.ObjectId,
-      ref: "User",
-    },
+    users: [
+      {
+        type: Schema.ObjectId,
+        ref: "User",
+      },
+    ],
     orders: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: "Order",
       },
     ],

@@ -3,7 +3,7 @@ import { validateResult } from "../helpers/validateHelpers.js";
 import users from "../schemas/users.js";
 import { createUpdateUser } from "./utils.js";
 
-export const authRegisterDTO = [
+const authRegisterDTO = [
   ...createUpdateUser,
   check("email", "Email is required")
     .exists()
@@ -21,3 +21,5 @@ export const authRegisterDTO = [
     validateResult(req, res, next);
   },
 ];
+
+export { authRegisterDTO };
