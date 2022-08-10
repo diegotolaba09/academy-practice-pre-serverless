@@ -5,6 +5,7 @@ Practice pre-serverless in Backend Academy
 - Antes de comenzar a levantar el project se debe correr lo siguiente:
   - npm install
   - npm run docker-watch (previamente se debe tener instalado docker)
+  - npm run db:seed:dev (carga datos fakes a la db para hacer pruebas rápidas)
   - npm run dev (esto corre la aplicación en desarrollo)
 
 Casos de Uso (roles):
