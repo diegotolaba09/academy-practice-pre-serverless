@@ -14,6 +14,10 @@ const PaymentIntentScheme = new Schema(
     paymentId: {
       type: Schema.ObjectId,
     },
+    attemptsAvailable: {
+      type: Number,
+      default: 0,
+    },
     products: [
       {
         type: Schema.ObjectId,

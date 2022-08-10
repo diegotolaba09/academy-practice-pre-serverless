@@ -15,8 +15,9 @@ import {
   paymentIntentUpdateDTO,
   payIntentToPayDTO,
 } from "../dto/paymentIntents.js";
+import { cb } from "../helpers/callbackHooks.js";
 
-const { ADMIN, CUSTOMER, GUEST } = USER_ROLES;
+const { ADMIN, CUSTOMER } = USER_ROLES;
 
 const router = express.Router();
 
@@ -38,12 +39,8 @@ router.post(
   createPaymentIntent
 );
 
-router.post(
-  "/pay/:id",
-  // checkAuth,
-  // checkRole([ADMIN, CUSTOMER, GUEST]),
-  payIntentToPayDTO,
-  payIntentToPay
+router.post("/pay/:id", payIntentToPayDTO, (req, res, next) =>
+  payIntentToPay(req, res, next, cb)
 );
 
 router.patch(

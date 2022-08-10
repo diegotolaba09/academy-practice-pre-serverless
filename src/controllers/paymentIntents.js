@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import paymentIntentModel from "../schemas/paymentIntents.js";
 import shopModel from "../schemas/shops.js";
 import userModel from "../schemas/users.js";
@@ -51,7 +52,7 @@ const createPaymentIntent = async (req, res, next) => {
   }
 };
 
-const payIntentToPay = async (req, res, next) => {
+const payIntentToPay = async (req, res, next, cb) => {
   try {
     const { id: payId } = req.params;
     const { userId } = getUserAuth(req);
@@ -59,22 +60,52 @@ const payIntentToPay = async (req, res, next) => {
     const user = await userModel.findById({ _id: userId });
 
     if (!user?.availableLimit) {
-      throw { message: "User has no available limit", status: 400 };
+      return cb(
+        { message: "User has no available limit", status: 400 },
+        res,
+        next
+      );
     }
 
-    const payment = await paymentIntentModel.findOneAndUpdate(
-      { _id: payId, status: "pending" },
-      { status: "finished" },
-      { new: true }
-    );
+    const payment = await paymentIntentModel
+      .findOneAndUpdate(
+        { _id: payId, status: "pending" },
+        { status: "blocked" },
+        { new: true }
+      )
+      .populate({
+        path: "products",
+      });
 
     if (!payment) {
-      throw { message: "Payment Intent not found", status: 404 };
+      return cb(
+        { message: "Payment Intent not found or status blocked", status: 404 },
+        res,
+        next
+      );
     }
 
-    res.send({ data: payment });
+    payment.attemptsAvailable++;
+    await payment.save();
+
+    if (payment.attemptsAvailable > 3) {
+      return cb(
+        {
+          message: "Available attempts were exceeded, payment blocked",
+          status: 406,
+        },
+        res,
+        next
+      );
+    }
+
+    payment.status = "finished";
+    payment.paymentId = new mongoose.Types.ObjectId();
+    await payment.save();
+
+    return cb({ data: payment, status: 200 }, res, next);
   } catch (err) {
-    next(err);
+    return cb(err, res, next);
   }
 };
 
